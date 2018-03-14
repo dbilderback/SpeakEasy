@@ -3,32 +3,32 @@
 Group name: # 11 Baby Got Hack
 
 Team members:
-      Bhanoo
+      Bhanoo Gulati
       Adam Troy
-      Daryll
+      Daryl Bilderback
       Courtney Willams
-      Desmon
+      Desmon Stanford
    
-Synopsys:
-
+Synopsis:
+      Journal entry app that incorporates use of integrated voice recognition and text conversion to multiple languages. This       journal app is targeted toward businesses, students, and busy, working people who feel the need to quickly jot down           ideas and information without the worry of forgetting important information or losing documents. For security                 protection, this journal app also stores the users personal journal entries into a safe location with password/username       integration.
 
 Roles:
-Courtney & aDAM : fRONTEND AND fRONTEND Routes
-Bhanoo: Node Routes
-DEsmond: Sequelize Library, 
-Daryl: Environment SetUp, Database .  - MySql, Authentication,
+      Courtney & Adam : Frontend design and HTML routes
+      Bhanoo: Node Routes
+      Desmond: Sequelize Library, 
+      Daryl: Environment SetUp, Database .  - MySql, Authentication,
 
 
-External API: Web Speech API, bcrypt llibrray, wiziwig editor (maybe)
+External API: 
+      Web Speech API, bcrypt llibrray, wiziwig editor (maybe)
 
-
-      
-      
+    
 Storyboard:
-Page1: Login Page 
-Page2: Journal/Journal Entry
-Page3: Journey Detail
-Page4: Edit Profile
+      Page1: Login Page 
+      Page2: Journal/Journal Entry
+      Page3: Journey Detail
+      Page4: Edit Profile
+
 
 Data Model:                     Journal Entry 
 User details:                    Title 
