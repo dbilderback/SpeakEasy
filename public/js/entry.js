@@ -3,6 +3,7 @@ $(document).ready(function() {
 
   // Entry Container holds all of our posts
   var userContainer = $(".user-container");
+  var entryContainer = $(".entry-container");
   var entryCategorySelect = $("#category");
   // Click events for the edit and delete buttons
   $(document).on("click", "button.delete", handleEntryDelete);

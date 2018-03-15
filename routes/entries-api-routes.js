@@ -19,7 +19,7 @@ module.exports = function(app) {
       query.UserId = req.query.user_id;
     }
     // Join to include all of the Users to these diary entries
-    db.Post.findAll({
+    db.Entry.findAll({
       include:[{model:db.User}],
       where: query
     }).then(function(dbEntry) {
@@ -30,7 +30,7 @@ module.exports = function(app) {
   // Get rotue for retrieving a single post
   app.get("/api/entries/:id", function(req, res) {
     // Join here to include the User who wrote the diary entry
-    db.Post.findOne({
+    db.Entry.findOne({
       include:[{model:db.User}],
       where: {
         id: req.params.id

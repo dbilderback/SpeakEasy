@@ -2,8 +2,8 @@ module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define("User", {
     // Giving the User model a name of type STRING
     userId: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV1,
       primaryKey: true
     },
     firstName: {
@@ -61,7 +61,6 @@ module.exports = function(sequelize, DataTypes) {
     // Associating Users with their diary entries
     // When an User is deleted, also delete all of their diary entries
     User.hasMany(models.Entry, {
-      foreignKey: 'userId',
       onDelete: "cascade"
     });
   };

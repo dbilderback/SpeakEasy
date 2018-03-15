@@ -42,7 +42,7 @@ $(document).ready(function() {
       body: bodyInput
         .val()
         .trim(),
-      UserId: +userSelect.val()
+      userId: userSelect.val()
     };
 
     // If we're updating a post run updatePost to update a post

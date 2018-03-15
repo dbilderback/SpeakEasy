@@ -35,6 +35,7 @@ module.exports = function(sequelize, DataTypes) {
     // A Entry can't be created without an due to the foreign key constraint
     Entry.belongsTo(models.User, {
       foreignKey: {
+        name: "userId",
         allowNull: false
       }
     });
