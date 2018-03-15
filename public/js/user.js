@@ -50,8 +50,8 @@ $(document).ready(function() {
     newTr.data("user", userData);
     newTr.append("<td>" + userData.firstName + " " + userData.lastName + "</td>");
     newTr.append("<td> " + userData.Entries.length + "</td>");
-    newTr.append("<td><a href='/diary?user_id=" + userData.id + "'>Go to Entries</a></td>");
-    newTr.append("<td><a href='/cms?user_id=" + userData.id + "'>Create a New Diary Entry</a></td>");
+    newTr.append("<td><a href='/diary?user_id=" + userData.userId + "'>Go to Entries</a></td>");
+    newTr.append("<td><a href='/cms?user_id=" + userData.userId + "'>Create a New Diary Entry</a></td>");
     newTr.append("<td><a style='cursor:pointer;color:red' class='delete-user'>Delete User</a></td>");
     return newTr;
   }

@@ -42,7 +42,7 @@ $(document).ready(function() {
       body: bodyInput
         .val()
         .trim(),
-      UserId: userSelect.val()
+      UserId: +userSelect.val()
     };
 
     // If we're updating a post run updatePost to update a post
@@ -115,8 +115,8 @@ $(document).ready(function() {
   // Creates the author options in the dropdown
   function createUserRow(user) {
     var listOption = $("<option>");
-    listOption.attr("value", user.id);
-    listOption.text(user.name);
+    listOption.attr("value", user.userId);
+    listOption.text(user.firstName + " " + user.lastName);
     return listOption;
   }
 
