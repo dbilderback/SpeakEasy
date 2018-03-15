@@ -1,0 +1,47 @@
+button.submit {
+  float: right;
+}
+
+form#cms {
+  margin-top: 50px;
+}
+
+#cms textarea {
+  resize: none;
+}
+
+.panel-heading button.delete,
+button.edit {
+  float: right;
+  margin: 5px;
+}
+
+.user-container {
+  margin-top: 50px;
+}
+
+.user-list {
+  margin-top: 25px;
+}
+
+.diary-container {
+  margin-top: 30px;
+}
+
+.diary {
+  margin-top: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+#user-name {
+  width: 100%;
+  height: 35px;
+  margin-top: 5px;
+}
+
+.top-30 {
+  margin-top: 30px;
+}
