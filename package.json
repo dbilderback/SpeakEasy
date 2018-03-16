@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Group name: # 11 Baby Got Hack",
   "main": "server.js",
+  "username": "root",
+  "password": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
