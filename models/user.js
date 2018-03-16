@@ -38,7 +38,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [8, 24]
+        len: [8, 255]
       }
     },
     last_login: {
