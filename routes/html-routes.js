@@ -32,4 +32,8 @@ module.exports = function(app) {
     res.sendFile(path.join(__dirname, "../public/user-manager.html"));
   });
 
+  app.get("/voice", function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/voice.html"));
+  });
+
 };
