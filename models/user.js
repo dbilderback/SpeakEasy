@@ -20,6 +20,13 @@ module.exports = function(sequelize, DataTypes) {
         len: [1, 100]
       }
     },
+    userName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [4, 25]
+      }
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -33,6 +40,14 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         len: [8, 24]
       }
+    },
+    last_login: {
+      type: DataTypes.DATE
+    },
+
+    status: {
+        type: DataTypes.ENUM('active', 'inactive'),
+        defaultValue: 'active'
     },
     languagePreference: {
       type: DataTypes.INTEGER,
