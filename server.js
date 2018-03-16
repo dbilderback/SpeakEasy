@@ -10,13 +10,32 @@ var session    = require('express-session');
 var bodyParser = require("body-parser");
 var exphbs = require('express-handlebars');
 
+
 // Sets up the Express App
 // =============================================================
 var app = express();
 var PORT = process.env.PORT || 8080;
 
+
 // Requiring our models for syncing
 var db = require("./models");
+
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
+
+
+// For Passport
+app.use(session({ secret: 'speakeasy application',resave: true, saveUninitialized:true})); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
+
+// Static directory
+app.use(express.static("public"));
+
 
 //For Handlebars
 app.set('views', './app/views')
@@ -25,28 +44,16 @@ app.engine('hbs', exphbs({
 }));
 app.set('view engine', '.hbs');
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-// parse application/json
-app.use(bodyParser.json());
-
-// For Passport
- 
-app.use(session({ secret: 'keyboard cat',resave: true, saveUninitialized:true})); // session secret
- 
-app.use(passport.initialize());
- 
-app.use(passport.session()); // persistent login sessions
-
-// Static directory
-app.use(express.static("public"));
 
 // Routes
 // =============================================================
 require("./routes/html-routes.js")(app);
 require("./routes/user-api-routes.js")(app);
 require("./routes/entries-api-routes.js")(app);
-var authRoute = require('./app/routes/auth.js')(app);
+var authRoute = require('./app/routes/auth.js')(app,passport);
+
+//load passport strategies
+require('./config/passport/passport.js')(passport, db.User);
 
 // Syncing our sequelize models and then starting our Express app
 // =============================================================
