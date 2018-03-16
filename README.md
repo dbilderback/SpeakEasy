@@ -6,11 +6,11 @@ Team members:
       Bhanoo Gulati
       Adam Troy
       Daryl Bilderback
-      Courtney Willams
+      Courtney Williams
       Desmon Stanford
    
 Synopsis:
-      Journal entry app that incorporates use of integrated voice recognition and text conversion to multiple languages. This       journal app is targeted toward businesses, students, and busy, working people who feel the need to quickly jot down           ideas and information without the worry of forgetting important information or losing documents. For security                 protection, this journal app also stores the users personal journal entries into a safe location with password/username       integration.
+      SpeakEasy is a journal entry app that incorporates use of integrated voice recognition and text conversion to multiple         languages. It is targeted toward businesses, students, and busy, working people who feel the need to quickly jot down         ideas and information without the worry of forgetting important information or losing documents. For security                 protection, SpeakEasy also stores the users personal journal entries into a safe location with password/username               integration.
 
 Roles:
       Courtney & Adam : Frontend design and HTML routes
