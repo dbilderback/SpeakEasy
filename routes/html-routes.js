@@ -23,10 +23,10 @@ module.exports = function(app) {
   });
 
   // blog route loads blog.html
-  app.get("/diary", function(req, res) {
+  /*app.get("/diary", function(req, res) {
     res.sendFile(path.join(__dirname, "../public/diary.html"));
   });
-
+*/
   // authors route loads author-manager.html
   app.get("/users", function(req, res) {
     res.sendFile(path.join(__dirname, "../public/user-manager.html"));
