@@ -1,143 +1,155 @@
 $(document).ready(function() {
-  /* global moment */
-
-  // Entry Container holds all of our posts
-  var userContainer = $(".user-container");
-  var entryContainer = $(".entry-container");
-  var entryCategorySelect = $("#category");
-  // Click events for the edit and delete buttons
-  $(document).on("click", "button.delete", handleEntryDelete);
-  $(document).on("click", "button.edit", handleEntryEdit);
-  // Variable to hold our posts
-  var entries;
-
-  // The code below handles the case where we want to get diary entries for a specific user
-  // Looks for a query param in the url for user_id
+  // Getting jQuery references to the entry body, title, form, and user select
+  var bodyInput = $("#body");
+  var titleInput = $("#title");
+  var entryForm = $("#entry");
+  var userSelect = $("#user");
+  var privacySelect = $("#privacy");
+  // Adding an event listener for when the form is submitted
+  $(entryForm).on("submit", handleFormSubmit);
+  // Gets the part of the url that comes after the "?" (which we have if we're updating a post)
   var url = window.location.search;
+  var entryId;
   var userId;
-  if (url.indexOf("?user_id=") !== -1) {
+  // Sets a flag for whether or not we're updating a post to be false initially
+  var updating = false;
+
+  // If we have this section in our url, we pull out the post id from the url
+  // In '?post_id=1', postId is 1
+  if (url.indexOf("?entry_id=") !== -1) {
+    entryId = url.split("=")[1];
+    getEntryData(entryId, "entry");
+  }
+  // Otherwise if we have an author_id in our url, preset the author select box to be our Author
+  else if (url.indexOf("?user_id=") !== -1) {
     userId = url.split("=")[1];
-    getEntries(userId);
-  }
-  // If there's no userId we just get all diary entries as usual
-  // We need to add the public filter to this piece
-  else {
-    getEntries();
   }
 
+  // Getting the User's diary entries
+  getUsers();
+  renderPrivacyList();
 
-  // This function grabs posts from the database and updates the view
-  function getEntries(user) {
-    userId = user || "";
-    if (userId) {
-      userId = "/?user_id=" + userId;
+  // A function for handling what happens when the form to create a new post is submitted
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    // Wont submit the post if we are missing a body, title, or author
+    if (!titleInput.val().trim() || !bodyInput.val().trim() || !userSelect.val()) {
+      return;
     }
-    $.get("/api/entries" + userId, function(data) {
-      console.log("Entriess", data);
-      entries = data;
-      if (!entries || !entries.length) {
-        displayEmpty(user);
-      }
-      else {
-        initializeRows();
+    // Constructing a newPost object to hand to the database
+    var newEntry = {
+      title: titleInput
+        .val()
+        .trim(),
+      body: bodyInput
+        .val()
+        .trim(),
+      userId: userSelect.val()
+    };
+
+    // If we're updating a post run updatePost to update a post
+    // Otherwise run submitPost to create a whole new post
+    if (updating) {
+      newEntry.id = entryId;
+      updateEntry(newEntry);
+    }
+    else {
+      submitEntry(newEntry);
+    }
+  }
+
+  // Submits a new post and brings user to blog page upon completion
+  function submitEntry(entry) {
+    $.post("/api/entry", entry, function() {
+      window.location.href = "/diary";
+    });
+  }
+
+  // Gets post data for the current post if we're editing, or if we're adding to an author's existing posts
+  function getEntryData(id, type) {
+    var queryUrl;
+    switch (type) {
+      case "entry":
+        queryUrl = "/api/entry/" + id;
+        break;
+      case "user":
+        queryUrl = "/api/users/" + id;
+        break;
+      default:
+        return;
+    }
+    $.get(queryUrl, function(data) {
+      if (data) {
+        console.log(data.UserId || data.id)
+        // If this post exists, prefill our cms forms with its data
+        titleInput.val(data.title);
+        bodyInput.val(data.body);
+        userId = data.UserId || data.id;
+        // If we have a post with this id, set a flag for us to know to update the post
+        // when we hit submit
+        updating = true;
       }
     });
   }
 
-  // This function does an API call to delete posts
-  function deleteEntry(id) {
+  // A function to get Authors and then render our list of Authors
+  function getUsers() {
+    $.get("/api/users", renderUserList);
+  }
+  // Function to either render a list of authors, or if there are none, direct the user to the page
+  // to create an author first
+  function renderUserList(data) {
+    if (!data.length) {
+      window.location.href = "signup";
+    }
+    $(".hidden").removeClass("hidden");
+    var rowsToAdd = [];
+    for (var i = 0; i < data.length; i++) {
+      rowsToAdd.push(createUserRow(data[i]));
+    }
+    userSelect.empty();
+    console.log(rowsToAdd);
+    console.log(userSelect);
+    userSelect.append(rowsToAdd);
+    userSelect.val(userId);
+  };
+
+  function renderPrivacyList() {
+    var rowsToAdd = [];
+    for (var x=2; x > 1; x--) {
+      rowsToAdd.push(createPrivayRows(x));
+    }
+    console.log(rowsToAdd);
+    privacySelect.empty();
+    privacySelect.append(rowsToAdd);
+    privacySelect.val(0);
+  }
+
+  // Creates the author options in the dropdown
+  function createUserRow(user) {
+    var listOption = $("<option>");
+    listOption.attr("value", user.userId);
+    listOption.text(user.firstName + " " + user.lastName);
+    return listOption;
+  };
+
+  // Creates the Private entry options in the dropdown
+  function createPrivayRows(x, optionText) {
+    var listOption = $("<option>");
+    listOption.attr("value", x);
+    listOption.text(optionText);
+    return listOption;
+  };
+
+  // Update a given post, bring user to the blog page when done
+  function updateEntry(entry) {
     $.ajax({
-      method: "DELETE",
-      url: "/api/entries/" + id
+      method: "PUT",
+      url: "/api/entry",
+      data: entry
     })
     .then(function() {
-      getEntries(entryCategorySelect.val());
-    });
-  }
-
-  // InitializeRows handles appending all of our constructed post HTML inside blogContainer
-  function initializeRows() {
-    entryContainer.empty();
-    var entriesToAdd = [];
-    for (var i = 0; i < entries.length; i++) {
-      entriesToAdd.push(createNewRow(entries[i]));
-    }
-    entryContainer.append(entriesToAdd);
-  }
-
-  // This function constructs a post's HTML
-  function createNewRow(entry) {
-    var formattedDate = new Date(entry.createdAt);
-    formattedDate = moment(formattedDate).format("MMMM Do YYYY, h:mm:ss a");
-    var newEntryPanel = $("<div>");
-    newEntryPanel.addClass("panel panel-default");
-    var newEntryPanelHeading = $("<div>");
-    newEntryPanelHeading.addClass("panel-heading");
-    var deleteBtn = $("<button>");
-    deleteBtn.text("x");
-    deleteBtn.addClass("delete btn btn-danger");
-    var editBtn = $("<button>");
-    editBtn.text("EDIT");
-    editBtn.addClass("edit btn btn-info");
-    var newEntryTitle = $("<h2>");
-    var newEntryDate = $("<small>");
-    var newEntryUser = $("<h5>");
-    newEntryUser.text("Written by: " + entry.User.name);
-    newEntryUser.css({
-      float: "right",
-      color: "blue",
-      "margin-top":
-      "-10px"
-    });
-    var newEntryPanelBody = $("<div>");
-    newEntryPanelBody.addClass("panel-body");
-    var newEntryBody = $("<p>");
-    newEntryTitle.text(entry.title + " ");
-    newEntryBody.text(entry.body);
-    newEntryDate.text(formattedDate);
-    newEntryTitle.append(newEntryDate);
-    newEntryPanelHeading.append(deleteBtn);
-    newEntryPanelHeading.append(editBtn);
-    newEntryPanelHeading.append(newEntryTitle);
-    newEntryPanelHeading.append(newEntryUser);
-    newEntryPanelBody.append(newEntryBody);
-    newEntryPanel.append(newEntryPanelHeading);
-    newEntryPanel.append(newEntryPanelBody);
-    newEntryPanel.data("entry", entry);
-    return newEntryPanel;
-  }
-
-  // This function figures out which post we want to delete and then calls deletePost
-  function handleEntryDelete() {
-    var currentEntry = $(this)
-      .parent()
-      .parent()
-      .data("entry");
-    deleteEntry(currentEntry.id);
-  }
-
-  // This function figures out which post we want to edit and takes it to the appropriate url
-  function handleEntryEdit() {
-    var currentEntry = $(this)
-      .parent()
-      .parent()
-      .data("entry");
-    window.location.href = "/cms?entry_id=" + currentEntry.id;
-  }
-
-  // This function displays a messgae when there are no posts
-  function displayEmpty(id) {
-    var query = window.location.search;
-    var partial = "";
-    if (id) {
-      partial = " for Usr #" + id;
-    }
-    entryContainer.empty();
-    var messageh2 = $("<h2>");
-    messageh2.css({ "text-align": "center", "margin-top": "50px" });
-    messageh2.html("No diary entries yet" + partial + ", navigate <a href='/cms" + query +
-    "'>here</a> in order to get started.");
-    entryContainer.append(messageh2);
-  }
-
+      window.location.href = "/diary";
+    });  
+  };
 });
