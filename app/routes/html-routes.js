@@ -11,6 +11,7 @@ var htmlController = require('../controllers/htmlcontroller.js');
 // =============================================================
 module.exports = function(app, passport) {
 
+    app.get('.', isLoggedIn, htmlController.root);
 
     app.get('/main', isLoggedIn, htmlController.main);
 
