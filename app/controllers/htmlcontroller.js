@@ -1,6 +1,12 @@
 var exports = module.exports = {}
 
 exports.diary = function(req, res) {
+  //res.render('diary');
+  res.render('diary');
+};
+
+exports.root = function(req, res) {
+  //res.render('diary');
   res.render('diary');
 };
 

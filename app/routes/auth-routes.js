@@ -12,7 +12,7 @@ app.get('/signin', authController.signin);
 app.post('/signup',
     passport.authenticate('local-signup'),
     function(req, res) {
-        res.redirect('diary/?user_id='+req.user.userId);
+        res.redirect('diary/:user_id='+req.params.userId);
     });
 
 

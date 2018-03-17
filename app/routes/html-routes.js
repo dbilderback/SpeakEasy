@@ -11,11 +11,18 @@ var htmlController = require('../controllers/htmlcontroller.js');
 // =============================================================
 module.exports = function(app, passport) {
 
-    app.get('.', isLoggedIn, htmlController.root);
+    app.get('/', isLoggedIn, htmlController.root);
 
     app.get('/main', isLoggedIn, htmlController.main);
 
-    app.get('/diary', isLoggedIn, htmlController.diary);
+    /*app.get('/diary', isLoggedIn, htmlController.diary, function(req, res) {
+        res.redirect('diary/:user_id'+req.user.userId);
+    });*/
+
+    app.get('/diary/:user_id', isLoggedIn, htmlController.diary, function(req, res) {
+        console.log('Test' + req.params.user_id);
+        res.render('diary/:user_id='+req.query);
+    });
 
     app.get('/dashboard', isLoggedIn, htmlController.dashboard);
 
