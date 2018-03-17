@@ -1,0 +1,54 @@
+<div class="container">
+		<div class="row top-30">
+      <div class="col-md-2 col-sm-2">
+        <a class="btn btn-default" href="/user">Edit Your Profile</a>
+	  </div>
+	  <div class="col-md-2 col-sm-2">
+        <a class="btn btn-default" href="/logout">Logout</a>
+      </div>
+			<div class="col-md-2 col-sm-2">
+        <a class="btn btn-default" id="newEntryButton" href="/entry">New Entry</a>
+      </div>
+    </div>
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<div class="user-container">
+					<h1>Users</h1>
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Title</th>
+								<th>Date</th>
+								<th>Private</th>
+								<th>Delete Entry</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr id="form-row">
+								<form id="user-form">
+									<td colspan="4">
+										<input placeholder="Enter a first name" id="user-last-name" type="text" />
+									</td>
+									<td colspan="4">
+										<input placeholder="Enter a last name" id="user-first-name" type="text" />
+									</td>
+									<td colspan="4">
+										<input placeholder="Enter a email" id="user-email" type="text" />
+									</td>
+									<td colspan="4">
+										<input placeholder="Enter a password" id="user-password" type="text" />
+									</td>
+									<td><button type="submit" class="btn btn-success">Create User</button>
+									</td>
+								</form>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div>
+	</div>
+	<!-- Custom Script -->
+	<script src="../js/diary.js" type="text/javascript"></script>
