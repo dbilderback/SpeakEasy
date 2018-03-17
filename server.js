@@ -4,11 +4,12 @@
 // ******************************************************************************
 // *** Dependencies
 // =============================================================
-var express = require("express");
+var express    = require("express");
 var passport   = require('passport');
 var session    = require('express-session');
 var bodyParser = require("body-parser");
-var exphbs = require('express-handlebars');
+var exphbs     = require('express-handlebars');
+var fs         = require("fs");
 
 
 // Sets up the Express App
@@ -40,17 +41,21 @@ app.use(express.static("public"));
 //For Handlebars
 app.set('views', './app/views')
 app.engine('hbs', exphbs({
-    extname: '.hbs'
+    extname: '.hbs',
+    helpers: require("./app/helpers/handlebars.js").helpers,
+    defaultLayout: __dirname + '/app/views/layouts/main', 
+  layoutsDir: __dirname + '/app/views/layouts/',
+  partialsDir: __dirname + '/app/views/partials/'
 }));
 app.set('view engine', '.hbs');
 
 
 // Routes
 // =============================================================
-require("./routes/html-routes.js")(app);
+require("./app/routes/html-routes.js")(app, passport);
 require("./routes/user-api-routes.js")(app);
-require("./routes/entries-api-routes.js")(app);
-var authRoute = require('./app/routes/auth.js')(app,passport);
+require("./app/routes/entry-api-routes.js")(app);
+var authRoute = require('./app/routes/auth-routes.js')(app,passport);
 
 //load passport strategies
 require('./config/passport/passport.js')(passport, db.User);
