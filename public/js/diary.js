@@ -10,40 +10,36 @@ $(document).ready(function() {
   $(document).on("click", "button.edit", handleEntryEdit);
   // Variable to hold our posts
   var entries;
-
   // The code below handles the case where we want to get diary entries for a specific user
   // Looks for a query param in the url for user_id
-  var url = window.location.search;
+  var url = this.location.pathname;
   var userId;
-  if (url.indexOf("?user_id=") !== -1) {
+  userId = getUserId();
+  $("#newEntryButton").attr("href", "/entry/:user_id="+userId)
+  getEntries(userId);
+  
+function getUserId() {
+  if (url.indexOf(":user_id=") !== -1) {
     userId = url.split("=")[1];
-    $("#newEntryButton").attr("href", "/entry/:user_id="+userId)
-    console.log("*********************************************"+userId);
-    getEntries(userId);
+    return userId;
   }
-  // If there's no userId we just get all diary entries as usual
-  // We need to add the public filter to this piece
   else {
-    getEntries();
+  userId = "";
+  return userId;
   }
-
+}
 
   // This function grabs posts from the database and updates the view
   function getEntries(user) {
-    userId = user || "";
-    if (userId) {
-      userId = "/:user_id=" + userId;
-    }
-    console.log("*********************************************"+userId);
+    userId = getUserId();
+    userId = "/:user_id=" + userId;
+    
     $.get("/api/entry" + userId, function(data) {
-      console.log("Entriess", data);
       entries = data;
       if (!entries || !entries.length) {
-        console.log("empty");
         displayEmpty(user);
       }
       else {
-        console.log("full");
         initializeRows();
       }
     });
@@ -53,7 +49,7 @@ $(document).ready(function() {
   function deleteEntry(id) {
     $.ajax({
       method: "DELETE",
-      url: "/api/entries/" + id
+      url: "/api/entry/:entry_id=" + id
     })
     .then(function() {
       getEntries(entryCategorySelect.val());
@@ -87,7 +83,7 @@ $(document).ready(function() {
     var newEntryTitle = $("<h2>");
     var newEntryDate = $("<small>");
     var newEntryUser = $("<h5>");
-    newEntryUser.text("Written by: " + entry.User.name);
+    newEntryUser.text("Written by: " + entry.User.firstName + " " + entry.User.lastName);
     newEntryUser.css({
       float: "right",
       color: "blue",
@@ -118,7 +114,7 @@ $(document).ready(function() {
       .parent()
       .parent()
       .data("entry");
-    deleteEntry(currentEntry.id);
+    deleteEntry(currentEntry.entryId);
   }
 
   // This function figures out which post we want to edit and takes it to the appropriate url
@@ -127,7 +123,7 @@ $(document).ready(function() {
       .parent()
       .parent()
       .data("entry");
-    window.location.href = "/cms?entry_id=" + currentEntry.id;
+    window.location.href = "/entry/:entry_id=" + currentEntry.entryId;
   }
 
   // This function displays a messgae when there are no posts

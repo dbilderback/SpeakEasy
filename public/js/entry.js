@@ -8,7 +8,7 @@ $(document).ready(function() {
   // Adding an event listener for when the form is submitted
   $(entryForm).on("submit", handleFormSubmit);
   // Gets the part of the url that comes after the "?" (which we have if we're updating a post)
-  var url = window.location.search;
+  var url = this.location.pathname;
   var entryId;
   var userId;
   // Sets a flag for whether or not we're updating a post to be false initially
@@ -16,12 +16,12 @@ $(document).ready(function() {
 
   // If we have this section in our url, we pull out the post id from the url
   // In '?post_id=1', postId is 1
-  if (url.indexOf("?entry_id=") !== -1) {
+  if (url.indexOf(":entry_id=") !== -1) {
     entryId = url.split("=")[1];
     getEntryData(entryId, "entry");
   }
   // Otherwise if we have an author_id in our url, preset the author select box to be our Author
-  else if (url.indexOf("?user_id=") !== -1) {
+  else if (url.indexOf(":user_id=") !== -1) {
     userId = url.split("=")[1];
   }
 
@@ -60,9 +60,9 @@ $(document).ready(function() {
 
   // Submits a new post and brings user to blog page upon completion
   function submitEntry(entry) {
-    $.post("/api/entry", entry, function() {
-      window.location.href = "/diary";
-    });
+    console.log(userId);
+    $.post("/api/entry/:user_id="+userId, entry) 
+      .then(window.location.href = "/diary/:user_id="+userId);
   }
 
   // Gets post data for the current post if we're editing, or if we're adding to an author's existing posts
@@ -80,11 +80,11 @@ $(document).ready(function() {
     }
     $.get(queryUrl, function(data) {
       if (data) {
-        console.log(data.UserId || data.id)
+        console.log(data["0"].userId || data["0"].entryId)
         // If this post exists, prefill our cms forms with its data
-        titleInput.val(data.title);
-        bodyInput.val(data.body);
-        userId = data.UserId || data.id;
+        titleInput.val(data["0"].title);
+        bodyInput.val(data["0"].body);
+        userId = data["0"].userId;
         // If we have a post with this id, set a flag for us to know to update the post
         // when we hit submit
         updating = true;
@@ -143,13 +143,14 @@ $(document).ready(function() {
 
   // Update a given post, bring user to the blog page when done
   function updateEntry(entry) {
+    entryId = url.split("=")[1];
     $.ajax({
       method: "PUT",
-      url: "/api/entry",
+      url: "/api/entry/:entry_id="+entryId,
       data: entry
     })
     .then(function() {
-      window.location.href = "/diary";
+      window.location.href = "/diary/:user_id="+userId;
     });  
   };
 });
