@@ -2,7 +2,7 @@ var exports = module.exports = {}
 
 exports.diary = function(req, res) {
   //res.render('diary');
-  res.render('diary');
+  res.render('diary', { username: req.user.userId });
 };
 
 exports.root = function(req, res) {
