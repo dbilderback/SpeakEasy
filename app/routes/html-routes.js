@@ -26,8 +26,8 @@ module.exports = function(app, passport) {
 
     app.get('/dashboard', isLoggedIn, htmlController.dashboard);
 
-    app.get('/entry/:userId', isLoggedIn, htmlController.entry, function(req, res) {
-        res.send(req.params.userId);
+    app.get('/entry/:user_id', isLoggedIn, htmlController.entry, function(req, res) {
+        res.render('entry/:user_id='+req.query);
     });
 
     app.get('/profile', isLoggedIn, htmlController.profile);

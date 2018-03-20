@@ -19,16 +19,20 @@ module.exports = function(app) {
     if (req.query.user_id) {
       query.UserId = req.query.user_id;
     }
-    console.log(query.UserId);
-    console.log(req.query.user_id);
-    // Join to include all of the Users to these diary entries
-    console.log(db.User);
-    db.Entry.findAll({
+    
+    /*db.Entry.findAll({
       include:[{
       model:db.User,
       attributes: ['userId'],
       through: { where: {userId: req.params.id}},
       }]
+    })*/
+    db.Entry.findAll({
+      include:[{
+        model:db.User,
+        attributes: ['userId', 'firstName', 'lastName'],
+        through: { where: {userId: req.user.userId}},
+        }]
     }).then(function(dbEntry) {
       res.json(dbEntry);
     });
@@ -42,50 +46,53 @@ module.exports = function(app) {
   }]
 */
   // Get route for retrieving a single diary entry for a given user
-  app.get("/api/entry/:id", function(req, res) {
-    var url = window.location.search;
-    var userId;
-    if (url.indexOf("?user_id=") !== -1) {
-      userId = url.split("=")[1];
-    }
+  app.get("/api/entry/:user_id", function(req, res) {
     // Join here to include the User who wrote the diary entry
     db.Entry.findAll({
       include:[{model:db.User}],
       where: {
-        userId: userId
+        userId: req.user.userId
       }
-    }).then(function(dbEntry) {
-      console.log(dbEntry);
+    })
+    /*db.Entry.findAll({
+      where: {
+        userId: req.user.userId
+      }
+    })*/.then(function(dbEntry) {
       res.json(dbEntry);
     });
   });
 
   // POST route for saving a new diary entry
-  app.post("/api/entry", function(req, res) {
-    console.log(req.body);
+  app.post("/api/entry/:user_id", function(req, res) {
     db.Entry.create(req.body).then(function(dbEntry) {
       res.json(dbEntry);
+      //res.redirect('diary/:user_id='+req.user.userId);
     });
   });
 
   // DELETE route for deleting a single post for a given user
-  app.delete("/api/entry/:id", function(req, res) {
+  app.delete("/api/entry/:entry_id", function(req, res) {
+    console.log("Fell INTO THE DELETE ROUTE")
+    var entryId = req.params.entry_id.split("=")[1];
+    console.log(entryId);
     db.Entry.destroy({
       where: {
-        id: req.params.id
+        entryId: entryId
       }
     }).then(function(dbEntry) {
       res.json(dbEntry);
     });
   });
-
+  
   // PUT route for updating posts
-  app.put("/api/entry", function(req, res) {
+  app.put("/api/entry/:entry_id", function(req, res) {
+    var entryId = req.params.entry_id.split("=")[1];
     db.Entry.update(
       req.body,
       {
         where: {
-          id: req.params.id
+          entryId: entryId
         }
       }).then(function(dbUser) {
         res.json(dbUser);
