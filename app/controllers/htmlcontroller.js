@@ -14,6 +14,10 @@ exports.main = function(req, res) {
   res.render('index');
 };
 
+exports.user = function(req, res) {
+  res.render('user');
+}
+
 exports.dashboard = function(req, res) {
 	res.render('dashboard'); 
 };
