@@ -12,6 +12,7 @@
   "author": "Daryl Bilderback, Bhanoo Gulati, Adam Troy, Courtney Williams, Desmon Stanford",
   "license": "ISC",
   "dependencies": {
+    "artyom.js": "^1.0.6",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
