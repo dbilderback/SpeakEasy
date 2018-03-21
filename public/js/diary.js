@@ -15,7 +15,8 @@ $(document).ready(function() {
   var url = this.location.pathname;
   var userId;
   userId = getUserId();
-  $("#newEntryButton").attr("href", "/entry/:user_id="+userId)
+  $("#newEntryButton").attr("href", "/entry/:user_id="+userId);
+  $("#editUserButton").attr("href", "/user/:user_id="+userId);
   getEntries(userId);
   
 function getUserId() {

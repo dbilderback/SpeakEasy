@@ -1,83 +1,324 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Title</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <title>SpeakEasy</title>
+  <!-- Latest compiled and minified CSS & JS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" media="screen" title="no title">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="artyom.window.js"></script>
 </head>
 
 <body>
-        <form>
-                <div class="form-group">
-                  <div id="textBox"></div>
-                  <!-- <button onclick="startConverting();">
-                            <i class="fa fa-microphone"></i>
-                        </button> -->
-                </div>
-              </form>
-              <button type="button" class="btn btn-primary">Voice</button>
+  <div class="container">
+    <div class="row top-30">
+      <div class="col-md-2 col-sm-2">
+        <a class="btn btn-default" href="/diary">Go to Your Diary</a>
+      </div>
+      <div class="col-md-2 col-sm-2">
+        <a class="btn btn-default" href="/users">Manage Users</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <form id="cms">
+          <div class="form-group">
+            <label for="title">Title:</label>
+            <input placeholder="Entry Title" type="text" class="form-control" id="title">
+            <br />
+            <label for="body">Body:</label>
+            <textarea placeholder="Entry Body" class="form-control" rows="10" id="textBox"></textarea>
+            <div class="form-group">
+              <label for="category">Select User:</label>
+              <select class="form-control" id="user">
+              </select>
             </div>
+            <br />
+            <button type="submit" class="btn btn-success submit">Submit</button>
+            <button type="button" class="btn btn-primary" id="button-speech">Start</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Custom Script -->
+  <script src="js/cms.js" type="text/javascript"></script>
+  <script>
+    var SpeakEasy = new Artyom();
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-   <script>
-        $(document).ready(function () {
-            var r = document.getElementById('textBox');
-            function startConverting() {
-                if ('webkitSpeechRecognition' in window) {
-                    var speechRecognizer = new webkitSpeechRecognition();
-                    speechRecognizer.continuous = false;
-                    speechRecognizer.interimResults = true;
-                    speechRecognizer.lang = 'en-US';
-                    speechRecognizer.start();
+    var comandos = [
+      {
+        description: "Trigger the creation of a post with your voice ! Say the command and replace the * With the content of your note. <br> Example: <b>Make me a note call my mother this sunday</b>",
+        indexes: ["Make me a note *", "Create a note *", "Remember me *", "Creare una nota *", "Crear nota *", "Notiz hinzufügen *", 'créer la note *'],
+        smart: true,
+        action: function (index, wildcard) {
+          var id = parseInt($("col-md-12 entry-container").last().data("noteid")) + 1;
+          if (isNaN(id)) {
+            id = 1;
+          }
 
-                    var finalTranscripts = '';
+          AddNote(wildcard, id, true);
+          switch (artyom.getLanguage()) {
+            case "en-GB":
+            case "en-US":
+              artyom.say("Note added succesfully");
+              break;
+            case "it-IT":
+              artyom.say("Nota è stato creato con successo");
+              break;
+            case "es-ES":
+            case "es-CO":
+              artyom.say("Nota creada satisfactoriamente");
+              break;
+            case "de-DE":
+              artyom.say("Reminder erfolgreich erstellt");
+              break;
+          }
+        }
+      },
+      {
+        description: "Remove a note with the identified number! Replace the * With the number of an existing note <br> Example : <b>Remove note number 1</b>",
+        indexes: ["Remove note number *", "Remove the note number *", "Delete the note number *", "Delete note number *", "eliminare la nota *", "entfernen Note *", "Remover nota numero *", "supprimer la note *"],
+        smart: true,
+        action: function (index, wildcard) {
+          var number = wildcard;
 
-                    speechRecognizer.onresult = function (event) {
-                        var interimTranscripts = '';
-                        for (var i = 0; i < event.results.length; i++) {
-                            var transcript = event.results[i][0].transcript;
-                            transcript.replace('/n', '<br>');
-                            if (event.results[i].isFinal) {
-                                finalTranscripts += transcript;
-                            } else {
-                                interimTranscripts += transcript;
-                            }
-                        }
-                        r.innerHTML = finalTranscripts + '<span style="color:#999">' + interimTranscripts +
-                            '</span>';
-                    };
-                    speechRecognizer.onerror = function (event) {
+          if (isNaN(number)) {
+            alert("Cannot remove the note with id : " + number + " . Is not numeric, if you say a number maybe, artyom doesn't give a numeric value, instead give in characters. Try again.");
+          } else {
+            RemoveNoteNumber(number);
 
-                    }
-                } else {
-                    r.innerHTML = 'browser not supported';
-                };
-            };
-            $("button").on("click", function () {
-        startConverting();
+            switch (artyom.getLanguage()) {
+              case "en-US":
+              case "en-GB":
+                artyom.say("The note will not appear anymore in the list");
+                break;
+              case "es-ES":
+              case "es-CO":
+                artyom.say("Esa nota no aparecera mas en la lista");
+                break;
+              case "it-IT":
+                artyom.say("La nota non apparirà più nella lista");
+                break;
+              case "de-DE":
+                artyom.say("Diese Notiz nimmt auf der Liste erscheinen");
+                break;
+            }
+          }
+        }
+      },
+      {
+        description: "Removes all the notes saved in the document",
+        indexes: ["Remove all the notes", "Remove everything", "Delete all", "Delete all the notes", "eliminare tutte le note", "rimuovere tutte le note", "entfernen Sie alle Notizen", "Eliminar todas las notas"],
+        action: function () {
+          switch (artyom.getLanguage()) {
+            case "en-US":
+            case "en-GB":
+              artyom.say("Are you sure you want to remove all the notes? You can't undo this action", {
+                onEnd: function () {
+                  if (confirm("Delete all the notes?")) {
+                    window.localStorage.setItem("notes", "[]");
+                    $("#col-md-12 entry-container").empty();
+                  }
+                }
+              });
+              break;
+            case "it-IT":
+              artyom.say("Sei sicuro di voler rimuovere tutte le note? Non è possibile annullare questa azione", {
+                onEnd: function () {
+                  if (confirm("eliminare tutte le note?")) {
+                    window.localStorage.setItem("notes", "[]");
+                    $("#col-md-12 entry-container").empty();
+                  }
+                }
+              });
+              break;
+            case "es-ES":
+            case "es-CO":
+              artyom.say("Esta seguro de que quiere eliminar las notas? no puede deshacer esta acción", {
+                onEnd: function () {
+                  if (confirm("Eliminar de todas maneras?")) {
+                    window.localStorage.setItem("notes", "[]");
+                    $("#col-md-12 entry-container").empty();
+                  }
+                }
+              });
+              break;
+            case "de-DE":
+              artyom.say("Wirklich wollen, um alle Notizen löschen? Sie können diese Aktion nicht rückgängig gemacht werden", {
+                onEnd: function () {
+                  if (confirm("löschen")) {
+                    window.localStorage.setItem("notes", "[]");
+                    $("#col-md-12 entry-container").empty();
+                  }
+                }
+              });
+              break;
+          }
+        }
+      }
+    ];
 
-      });
+    /**
+     * Add the commands to artyom !
+     * @param {type} param
+     */
+    artyom.addCommands(comandos);
+
+    var settings = {
+      continuous: true, // Don't stop never because i have https connection
+      onResult: function (text) {
+        // Show the Recognized text in the console
+        console.log("Recognized text: ", text);
+      },
+      onStart: function () {
+        console.log("Dictation started by the user");
+      },
+      onEnd: function () {
+        alert("Dictation stopped by the user");
+      }
+    };
+
+    var UserDictation = artyom.newDictation(settings);
+    var listening = false
+    // Link the events to buttons in the document
+    $("#button-speech").click(function () {
+      // Start the Dictation
+      if (!listening) {
+        UserDictation.start();
+        $("#button-speech").text("Stop");
+        listening = true;
+      } else {
+        UserDictation.stop();
+        $("#button-speech").text("Start");
+        listening = false;
+      }
+    });
+
+    $(window).load(function () {
+      RenderCommands();
+      //We create an artyom extension in order to call it when we want 
+      artyom.extensions.StartMainDemo = function (lang) {
+        artyom.initialize({
+          lang: lang,
+          continuous: true,//Listen forever
+          listen: true,
+          debug: true
         });
+      };
+
+      artyom.extensions.StartMainDemo($("#language-selector").val());
+    });
+
+    $(function () {
+      if (!artyom.device.isChrome) {
+        alert("ARTYOM ONLY WORKS IN Google Chrome BROWSER");
+      }
+
+      if (!window.localStorage.getItem("notes")) {
+        window.localStorage.setItem("notes", '[{"id":"1","content":"Reminder: create something awesome with artyom later"},{"id":"2","content":"Recordatorio: Crear algo asombroso con artyom luego"},{"id":"3","content":"Zur Erinnerung: schaffen etwas erstaunlich, mit Artyom später"},{"id":"4","content":"Promemoria: creare qualcosa di incredibile con Artyom più tardi"},{"id":"5","content":"Rappel: créer quelque chose d´incroyable avec Artyom tard"}]');
+      }
+
+      var notas = JSON.parse(window.localStorage.getItem("notes"));
+
+      for (var i = 0; i < notas.length; i++) {
+        AddNote(notas[i].content, notas[i].id, false);
+      }
+
+      if (window.localStorage.getItem("lang")) {
+        $("#language-selector").val(window.localStorage.getItem("lang"));
+      }
+
+      $("#language-selector").change(function () {
+        artyom.fatality();//Stop Any previous artyom if exist
+        var lang = $(this).val();
+        window.localStorage.setItem("lang", lang);
+        setTimeout(function () {
+          artyom.extensions.StartMainDemo(lang);
+        }, 2000);
+      });
+    });
+
+    function AddNote(content, id, addToLocal) {
+      if (typeof (window.localStorage) !== "undefined") {
+        if (addToLocal === true) {
+          var notitas = window.localStorage.getItem("notes");
+          if (notitas) {
+            var group = JSON.parse(notitas);
+            group.push({ id: id, content: content });
+            window.localStorage.setItem("notes", JSON.stringify(group));
+          } else {
+            var neu = [{ id: id, content: content }];
+            window.localStorage.setItem("notes", JSON.stringify(neu));
+          }
+        }
+      }
+
+      var note = '<li data-noteid="' + id + '" title="Click to talk this note">\n\
+                    <a href="javascript:void(0);" onclick="sayNoteContent(this);">\n\
+                      <h2>Note #'+ id + '</h2>\n\
+                      <p>'+ content + '</p>\n\
+                    </a>\n\
+                  </li>';
+      $("#sticky_notes_container").append(note);
+    }
+
+    function RemoveNoteNumber(id) {
+      var notas = JSON.parse(window.localStorage.getItem("notes"));
+      var found = false;
+
+      for (var i = notas.length - 1; i >= 0; i--) {
+        if (notas[i].id == id) {
+          notas.splice(i, 1);
+          found = true;
+        }
+      }
+
+      if (!found) {
+        alert("Cannot remove note number " + id + " because it doesn't exist !");
+      }
+
+      window.localStorage.setItem("notes", JSON.stringify(notas));
+
+      $("li[data-noteid='" + id + "']").remove();
+    }
 
 
-    </script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+    function RenderCommands() {
+      var comandi = artyom.getAvailableCommands();
+
+      for (var i = 0; i < comandi.length; i++) {
+        var com = comandi[i];
+        var list = "";
+        for (var q = 0; q < com.indexes.length; q++) {
+          list += "<br>" + com.indexes[q];
+        }
+
+        var row = '<tr>\n\
+                        <td>'+ list + '</td>\n\
+                        <td>'+ com.description + '</td>\n\
+                        </tr>';
+        $("#table-commands tbody").append(row);
+      }
+    }
+
+    function RestartDemo() {
+      window.localStorage.removeItem("notes");
+      window.localStorage.removeItem("lang");
+      window.location.reload();
+    }
+
+    function sayNoteContent(dom) {
+      artyom.say($(dom).find("p").text());
+    }
+
+
+
+  </script>
+
 </body>
 
 </html>

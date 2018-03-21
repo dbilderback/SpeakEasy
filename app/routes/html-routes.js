@@ -35,14 +35,10 @@ module.exports = function(app, passport) {
     app.get('/logout', htmlController.logout);
 
 
-    // cms route loads cms.html
-    app.get("/cms", function(req, res) {
-        res.sendFile(path.join(__dirname, "../public/cms.html"));
-    });
-
     // authors route loads author-manager.html
-    app.get("/users", function(req, res) {
-        res.sendFile(path.join(__dirname, "../public/user-manager.html"));
+    app.get("/user/:user_id", isLoggedIn, htmlController.user, function(req, res) {
+        console.log(req);
+        res.render('user/:user_id='+req.user.userId);
     });
 
     app.get("/voice", function(req, res) {

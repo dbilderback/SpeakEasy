@@ -98,4 +98,32 @@ module.exports = function(app) {
         res.json(dbUser);
       });
   });
+  // GET route for getting a single user's data
+  app.get("/api/user/:user_id", function(req, res) {
+    var query = {};
+    if (req.query.user_id) {
+      query.UserId = req.query.user_id;
+    }
+    db.User.findOne({
+      where: {
+        userId: req.user.userId
+      }
+    }).then(function(dbEntry) {
+      res.json(dbEntry);
+    });
+  });
+
+  //Post route for updating a single user
+  app.put("/api/user/:user_id", function(req, res) {
+    var userId = req.params.user_id.split("=")[1];
+      db.User.update(
+        req.body,
+        {
+          where: {
+            userId: userId
+          }  
+    }).then(function(dbUser) {
+      res.json(dbUser);
+    })
+  });
 };
