@@ -2,14 +2,14 @@
   "development": {
     "username": "wymz2716e0c4i5s7",
     "password": "r4m6gnmuj913bt01",
-    "database": "SpeakEasy",
+    "database": "ps6mczp6fnlfasg2",
     "host": "ixqxr3ajmyapuwmi.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
     "dialect": "mysql"
   },
   "test": {
     "username": "wymz2716e0c4i5s7",
     "password": "r4m6gnmuj913bt01",
-    "database": "SpeakEasy",
+    "database": "ps6mczp6fnlfasg2",
     "host": "ixqxr3ajmyapuwmi.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
     "dialect": "mysql"
   },
