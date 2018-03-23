@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "",
+    "database": "SpeakEasy",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "wymz2716e0c4i5s7",
+    "password": "r4m6gnmuj913bt01",
+    "database": "SpeakEasy",
+    "host": "ixqxr3ajmyapuwmi.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "",
+    "database": "SpeakEasy",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
