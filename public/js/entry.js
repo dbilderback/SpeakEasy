@@ -19,9 +19,8 @@ $(document).ready(function() {
   if (url.indexOf(":entry_id=") !== -1) {
     entryId = url.split("=")[1];
     getEntryData(entryId, "entry");
-  }
-  // Otherwise if we have an author_id in our url, preset the author select box to be our Author
-  else if (url.indexOf(":user_id=") !== -1) {
+  } else if (url.indexOf(":user_id=") !== -1) {
+    // Otherwise if we have an author_id in our url, preset the author select box to be our Author
     userId = url.split("=")[1];
   }
 
@@ -33,17 +32,17 @@ $(document).ready(function() {
   function handleFormSubmit(event) {
     event.preventDefault();
     // Wont submit the post if we are missing a body, title, or author
-    if (!titleInput.val().trim() || !bodyInput.val().trim() || !userSelect.val()) {
+    if (
+      !titleInput.val().trim() ||
+      !bodyInput.val().trim() ||
+      !userSelect.val()
+    ) {
       return;
     }
     // Constructing a newPost object to hand to the database
     var newEntry = {
-      title: titleInput
-        .val()
-        .trim(),
-      body: bodyInput
-        .val()
-        .trim(),
+      title: titleInput.val().trim(),
+      body: bodyInput.val().trim(),
       userId: userSelect.val()
     };
 
@@ -52,8 +51,7 @@ $(document).ready(function() {
     if (updating) {
       newEntry.id = entryId;
       updateEntry(newEntry);
-    }
-    else {
+    } else {
       submitEntry(newEntry);
     }
   }
@@ -61,8 +59,9 @@ $(document).ready(function() {
   // Submits a new post and brings user to blog page upon completion
   function submitEntry(entry) {
     console.log(userId);
-    $.post("/api/entry/:user_id="+userId, entry) 
-      .then(window.location.href = "/diary/:user_id="+userId);
+    $.post("/api/entry/:user_id=" + userId, entry).then(
+      (window.location.href = "/diary/:user_id=" + userId)
+    );
   }
 
   // Gets post data for the current post if we're editing, or if we're adding to an author's existing posts
@@ -80,7 +79,7 @@ $(document).ready(function() {
     }
     $.get(queryUrl, function(data) {
       if (data) {
-        console.log(data["0"].userId || data["0"].entryId)
+        console.log(data["0"].userId || data["0"].entryId);
         // If this post exists, prefill our cms forms with its data
         titleInput.val(data["0"].title);
         bodyInput.val(data["0"].body);
@@ -112,11 +111,11 @@ $(document).ready(function() {
     console.log(userSelect);
     userSelect.append(rowsToAdd);
     userSelect.val(userId);
-  };
+  }
 
   function renderPrivacyList() {
     var rowsToAdd = [];
-    for (var x=2; x > 1; x--) {
+    for (var x = 2; x > 1; x--) {
       rowsToAdd.push(createPrivayRows(x));
     }
     console.log(rowsToAdd);
@@ -131,7 +130,7 @@ $(document).ready(function() {
     listOption.attr("value", user.userId);
     listOption.text(user.firstName + " " + user.lastName);
     return listOption;
-  };
+  }
 
   // Creates the Private entry options in the dropdown
   function createPrivayRows(x, optionText) {
@@ -139,18 +138,90 @@ $(document).ready(function() {
     listOption.attr("value", x);
     listOption.text(optionText);
     return listOption;
-  };
+  }
 
   // Update a given post, bring user to the blog page when done
   function updateEntry(entry) {
     entryId = url.split("=")[1];
     $.ajax({
       method: "PUT",
-      url: "/api/entry/:entry_id="+entryId,
+      url: "/api/entry/:entry_id=" + entryId,
       data: entry
-    })
-    .then(function() {
-      window.location.href = "/diary/:user_id="+userId;
-    });  
+    }).then(function() {
+      window.location.href = "/diary/:user_id=" + userId;
+    });
+  }
+  var debounce = function(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this,
+        args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
   };
+  var speakEasy = new Artyom();
+  speakEasy.addCommands([
+    {
+      description:
+        "Trigger the creation of a post with your voice ! Say the command and replace the * With the content of your note. <br> Example: <b>Make me a note call my mother this sunday</b>",
+      indexes: [
+        "Start Recording a new note *",
+        "Create an entry *",
+        "Remember me *",
+        "Creare una nota *",
+        "Crear nota *",
+        "Notiz hinzufügen *",
+        "créer la note *"
+      ],
+      smart: true,
+      action: function(index, wildcard) {
+        $("#title").focus();
+        UserDictation.start();
+      }
+    }
+  ]);
+  function startArtyom() {
+    speakEasy.initialize({
+      lang: "en-GB",
+      continuous: true,
+      debug: true,
+      listen: true
+    });
+  }
+  function stopArtyom() {
+    speakEasy.fatality();
+  }
+
+  var noteContent = [];
+  var latestResult = "";
+
+  var UserDictation = speakEasy.newDictation({
+    continuous: true, // Enable continuous if HTTPS connection
+    onResult: function(text) {
+      // Do something with the text
+  
+      $("#textBox").text(text);
+      console.log(noteContent);
+    },
+    onStart: function() {
+      speakEasy.say("Speak");
+    },
+    onEnd: function() {
+      speakEasy.say("Note Recorded");
+    }
+  });
+  $('#speech-start').on("click", function() {
+    UserDictation.start();
+  });
+
+  $('#speech-stop').on("click", function() {
+    UserDictation.stop();
+  })
 });
