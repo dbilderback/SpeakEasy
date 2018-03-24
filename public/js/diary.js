@@ -137,8 +137,7 @@ function getUserId() {
     entryContainer.empty();
     var messageh2 = $("<h2>");
     messageh2.css({ "text-align": "center", "margin-top": "50px" });
-    messageh2.html("No diary entries yet" + partial + ", navigate <a href='/cms" + query +
-    "'>here</a> in order to get started.");
+    messageh2.html("No diary entries yet please click the link Journal Entry to begin");
     entryContainer.append(messageh2);
   }
 
