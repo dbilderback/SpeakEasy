@@ -13,7 +13,20 @@ $(document).ready(function() {
   var userId;
   // Sets a flag for whether or not we're updating a post to be false initially
   var updating = false;
-
+  // Looks for a query param in the url for user_id
+  userId = getUserId();
+  $("#viewDiaryButton").attr("href", "/diary/:user_id="+userId);
+  $("#editProfileButton").attr("href", "/user/:user_id="+userId);
+  function getUserId() {
+    if (url.indexOf(":user_id=") !== -1) {
+      userId = url.split("=")[1];
+      return userId;
+    }
+    else {
+    userId = "";
+    return userId;
+    }
+  }
   // If we have this section in our url, we pull out the post id from the url
   // In '?post_id=1', postId is 1
   if (url.indexOf(":entry_id=") !== -1) {
