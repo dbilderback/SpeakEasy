@@ -1,6 +1,6 @@
 $(document).ready(function() {
   // Getting jQuery references to the entry body, title, form, and user select
-  var bodyInput = $("#body");
+  var bodyInput = $("#textBox");
   var titleInput = $("#title");
   var entryForm = $("#entry");
   var userSelect = $("#user");
@@ -151,6 +151,7 @@ $(document).ready(function() {
       window.location.href = "/diary/:user_id=" + userId;
     });
   }
+
   var debounce = function(func, wait, immediate) {
     var timeout;
     return function() {
@@ -200,15 +201,23 @@ $(document).ready(function() {
   }
 
   var noteContent = [];
-  var latestResult = "";
-
+  var latestResult = noteContent[noteContent.length - 1];
+  var textToDisplay = [];
+  var i = 0;
   var UserDictation = speakEasy.newDictation({
     continuous: true, // Enable continuous if HTTPS connection
     onResult: function(text) {
-      // Do something with the text
-  
-      $("#textBox").text(text);
-      console.log(noteContent);
+i++
+noteContent.push(text);
+var latestResult = noteContent[noteContent.length-1];
+console.log(latestResult);
+if (latestResult === "") {
+  textToDisplay.push(noteContent[noteContent.length-2])
+}
+$("textarea#textBox").val(textToDisplay);
+      console.log(noteContent)
+      console.log(textToDisplay)
+      console.log(i);
     },
     onStart: function() {
       speakEasy.say("Speak");
@@ -217,11 +226,14 @@ $(document).ready(function() {
       speakEasy.say("Note Recorded");
     }
   });
-  $('#speech-start').on("click", function() {
+
+  $("#speech-start").on("click", function() {
     UserDictation.start();
   });
 
-  $('#speech-stop').on("click", function() {
+  $("#speech-stop").on("click", function() {
     UserDictation.stop();
-  })
+    $("#textBox").text(textToDisplay);
+  });
 });
+
