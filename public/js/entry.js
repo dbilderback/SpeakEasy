@@ -34,8 +34,7 @@ $(document).ready(function() {
     // Wont submit the post if we are missing a body, title, or author
     if (
       !titleInput.val().trim() ||
-      !bodyInput.val().trim() ||
-      !userSelect.val()
+      !bodyInput.val().trim() 
     ) {
       return;
     }
@@ -43,7 +42,7 @@ $(document).ready(function() {
     var newEntry = {
       title: titleInput.val().trim(),
       body: bodyInput.val().trim(),
-      userId: userSelect.val()
+      userId: userId
     };
 
     // If we're updating a post run updatePost to update a post
