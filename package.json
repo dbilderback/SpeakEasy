@@ -4,7 +4,7 @@
   "description": "Group name: # 11 Baby Got Hack",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node server.js",
     "watch": "nodemon server.js"
   },
@@ -15,11 +15,14 @@
     "artyom.js": "^1.0.6",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
+    "chai": "^4.1.2",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
+    "mocha": "^5.0.5",
     "moment": "^2.21.0",
     "mysql2": "^1.3.6",
+    "nightmare": "^3.0.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "sequelize": "^4.3.1"
