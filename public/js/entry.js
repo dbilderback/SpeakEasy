@@ -201,22 +201,20 @@ $(document).ready(function() {
   }
 
   var noteContent = [];
-  var latestResult = noteContent[noteContent.length - 1];
   var textToDisplay = [];
   var i = 0;
   var UserDictation = speakEasy.newDictation({
     continuous: true, // Enable continuous if HTTPS connection
     onResult: function(text) {
-i++
-noteContent.push(text);
-var latestResult = noteContent[noteContent.length-1];
-console.log(latestResult);
-if (latestResult === "") {
-  textToDisplay.push(noteContent[noteContent.length-2])
-}
-$("textarea#textBox").val(textToDisplay);
-      console.log(noteContent)
-      console.log(textToDisplay)
+      noteContent.push(text);
+      var latestResult = noteContent[noteContent.length - 1];
+      console.log(latestResult);
+      if (latestResult === "") {
+        textToDisplay.push(noteContent[noteContent.length - 2]);
+      }
+      $("textarea#textBox").val(textToDisplay);
+      console.log(noteContent);
+      console.log(textToDisplay);
       console.log(i);
     },
     onStart: function() {
@@ -236,4 +234,3 @@ $("textarea#textBox").val(textToDisplay);
     $("#textBox").text(textToDisplay);
   });
 });
-
