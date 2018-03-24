@@ -1,13 +1,48 @@
+<!-- Navigation bar -->
+<ul class="nav">
 
+    <div class="logo">
+        <img src="assets/img/SpeakEasyLogo.png">
+    </div>
+
+    <li>
+        <a href="signin.hbs">Sign-In</a>
+    </li>
+    <li>
+        <a href="signup.hbs">Sign-Up</a>
+    </li>
+    <li>
+        <a href="entry.hbs">Journal Entry</a>
+    </li>
+    <li>
+        <a href="user.hbs">Edit Profile</a>
+    </li>
+</ul>
+
+
+<!-- Image Banner -->
+<div class="banner">
+    <img class="banner-image" alt="banner image" src="assets/img/laptop.jpg">
+</div>
+
+<!-- Sign Up Box -->
+<h3>Sign-Up</h3>
+<div class="jumbotron">
     <form id="signup" name="signup" method="post" action="/signup">
-        <label for="email">Email Address</label>
-        <input class="text" name="email" type="email" />
         <label for="firstname">Firstname</label>
         <input name="firstname" type="text" />
         <label for="lastname">Lastname</label>
         <input name="lastname" type="text" />
+        <label for="email">Email Address</label>
+        <input class="text" name="email" type="email" />
         <label for="password">Password</label>
         <input name="password" type="password" />
-        <input class="btn" type="submit" value="Sign Up" />
+        <input class="signup-btn" type="submit" value="Sign Up" />
     </form>
- 
+</div>
+
+
+<!-- Footer -->
+<footer id="main-footer" class="grid">
+    <div>&copy; Copyright 2018 SpeakEasy</div>
+</footer>
