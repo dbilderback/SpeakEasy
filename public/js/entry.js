@@ -174,9 +174,12 @@ $(document).ready(function() {
           case "user":
             window.location.href = "/user/:user_id=" + userId;
             break;
-              case "sign in":
-                window.location.href = "/signin";
-                break;
+          case "sign in":
+            window.location.href = "/signin";
+            break;
+          case "entry":
+            window.location.href = "/entry/:user_id=" + userId;
+            break;
         }
       }
     }
@@ -218,8 +221,9 @@ $(document).ready(function() {
       $("#table-commands tbody").append(row);
     }
   }
-  RenderCommands();
 
+  startArtyom();
+  RenderCommands();
 
   var noteContent = [];
   var textToDisplay = [];
@@ -257,5 +261,4 @@ $(document).ready(function() {
   });
 
   $("#textBox").text(textToDisplay);
-  startArtyom();
 });
