@@ -94,8 +94,10 @@ $(document).ready(function() {
       if (data) {
         console.log(data["0"].userId || data["0"].entryId);
         // If this post exists, prefill our cms forms with its data
-        $("#viewDiaryButton").attr("href", "/diary/:user_id="+data.userId);
-        $("#editProfileButton").attr("href", "/user/:user_id="+data.userId);
+        $("#viewDiaryButton").attr("href", "/diary/:user_id="+data[0].userId);
+        $("#editProfileButton").attr("href", "/user/:user_id="+data[0].userId);
+        $("#diaryLink").attr("href", "/diary/:user_id="+data[0].userId);
+        $("#userLink").attr("href", "/user/:user_id="+data[0].userId);
         titleInput.val(data["0"].title);
         bodyInput.val(data["0"].body);
         userId = data["0"].userId;
