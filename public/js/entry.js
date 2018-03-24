@@ -13,20 +13,7 @@ $(document).ready(function() {
   var userId;
   // Sets a flag for whether or not we're updating a post to be false initially
   var updating = false;
-  // Looks for a query param in the url for user_id
-  userId = getUserId();
-  $("#viewDiaryButton").attr("href", "/diary/:user_id="+userId);
-  $("#editProfileButton").attr("href", "/user/:user_id="+userId);
-  function getUserId() {
-    if (url.indexOf(":user_id=") !== -1) {
-      userId = url.split("=")[1];
-      return userId;
-    }
-    else {
-    userId = "";
-    return userId;
-    }
-  }
+
   // If we have this section in our url, we pull out the post id from the url
   // In '?post_id=1', postId is 1
   if (url.indexOf(":entry_id=") !== -1) {
@@ -94,10 +81,6 @@ $(document).ready(function() {
       if (data) {
         console.log(data["0"].userId || data["0"].entryId);
         // If this post exists, prefill our cms forms with its data
-        $("#viewDiaryButton").attr("href", "/diary/:user_id="+data[0].userId);
-        $("#editProfileButton").attr("href", "/user/:user_id="+data[0].userId);
-        $("#diaryLink").attr("href", "/diary/:user_id="+data[0].userId);
-        $("#userLink").attr("href", "/user/:user_id="+data[0].userId);
         titleInput.val(data["0"].title);
         bodyInput.val(data["0"].body);
         userId = data["0"].userId;
@@ -170,33 +153,34 @@ $(document).ready(function() {
   }
 
   var speakEasy = new Artyom();
- var commands = ([
+  var commands = [
     {
-      description:
-        "Trigger the creation of a post with your voice ! Say the command and replace the * With the content of your note. <br> Example: <b>Make me a note call my mother this sunday</b>",
+      description: "Trigger the creation of a post with your voice",
       indexes: ["start recording a new note", "create an entry"],
       action: function(i) {
         stopArtyom();
         UserDictation.start();
-      },
+      }
     },
     {
       description: "Go to specified page ",
-      indexes: ["Take me to the * Page"],
+      indexes: ["Take me to the * Page", "Go to the * Page"],
       smart: true,
-      action: function(wildcard) {
+      action: function(i, wildcard) {
         switch (wildcard) {
           case "diary":
             window.location.href = "/diary/:user_id=" + userId;
             break;
-
           case "user":
-            window.location.href = "/api/users/" + userId;
+            window.location.href = "/user/:user_id=" + userId;
             break;
+              case "sign in":
+                window.location.href = "/signin";
+                break;
         }
       }
     }
-  ]);
+  ];
 
   function startArtyom() {
     speakEasy.initialize({
@@ -212,31 +196,33 @@ $(document).ready(function() {
 
   speakEasy.addCommands(commands);
 
-  function RenderCommands(){
+  function RenderCommands() {
     var comandi = speakEasy.getAvailableCommands();
-    
-    for(var i = 0;i < comandi.length;i++){
-        var com = comandi[i];
-        var list = "";
-        for(var q = 0;q < com.indexes.length;q++){
-            list += "<br>" + com.indexes[q];
-        }
-        
-        var row = '<tr>\n\
-                    <td>'+list+'</td>\n\
-                    <td>'+com.description+'</td>\n\
-                    </tr>';
-        $("#table-commands tbody").append(row);
-    }
-}
-        RenderCommands();
-    //We create an artyom extension in order to call it when we want 
 
-    
+    for (var i = 0; i < comandi.length; i++) {
+      var com = comandi[i];
+      var list = "";
+      for (var q = 0; q < com.indexes.length; q++) {
+        list += "<br>" + com.indexes[q];
+      }
+
+      var row =
+        "<tr>\n\
+                    <td>" +
+        list +
+        "</td>\n\
+                    <td>" +
+        com.description +
+        "</td>\n\
+                    </tr>";
+      $("#table-commands tbody").append(row);
+    }
+  }
+  RenderCommands();
+
 
   var noteContent = [];
   var textToDisplay = [];
-
 
   // starts voice recognition and appends to text box
   var UserDictation = speakEasy.newDictation({
@@ -270,9 +256,6 @@ $(document).ready(function() {
     startArtyom();
   });
 
-
   $("#textBox").text(textToDisplay);
   startArtyom();
-
-
 });
