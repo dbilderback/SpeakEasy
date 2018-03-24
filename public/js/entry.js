@@ -152,46 +152,39 @@ $(document).ready(function() {
     });
   }
 
-  var debounce = function(func, wait, immediate) {
-    var timeout;
-    return function() {
-      var context = this,
-        args = arguments;
-      var later = function() {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
-      var callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args);
-    };
-  };
   var speakEasy = new Artyom();
-  speakEasy.addCommands([
+ var commands = ([
     {
       description:
         "Trigger the creation of a post with your voice ! Say the command and replace the * With the content of your note. <br> Example: <b>Make me a note call my mother this sunday</b>",
-      indexes: [
-        "Start Recording a new note *",
-        "Create an entry *",
-        "Remember me *",
-        "Creare una nota *",
-        "Crear nota *",
-        "Notiz hinzufügen *",
-        "créer la note *"
-      ],
-      smart: true,
-      action: function(index, wildcard) {
-        $("#title").focus();
+      indexes: ["start recording a new note", "create an entry"],
+      action: function(i) {
+        stopArtyom();
         UserDictation.start();
+      },
+    },
+    {
+      description: "Go to specified page ",
+      indexes: ["Take me to the * Page"],
+      smart: true,
+      action: function(wildcard) {
+        switch (wildcard) {
+          case "diary":
+            window.location.href = "/diary/:user_id=" + userId;
+            break;
+
+          case "user":
+            window.location.href = "/api/users/" + userId;
+            break;
+        }
       }
     }
   ]);
+
   function startArtyom() {
     speakEasy.initialize({
       lang: "en-GB",
-      continuous: true,
+      continuous: false,
       debug: true,
       listen: true
     });
@@ -200,9 +193,35 @@ $(document).ready(function() {
     speakEasy.fatality();
   }
 
+  speakEasy.addCommands(commands);
+
+  function RenderCommands(){
+    var comandi = speakEasy.getAvailableCommands();
+    
+    for(var i = 0;i < comandi.length;i++){
+        var com = comandi[i];
+        var list = "";
+        for(var q = 0;q < com.indexes.length;q++){
+            list += "<br>" + com.indexes[q];
+        }
+        
+        var row = '<tr>\n\
+                    <td>'+list+'</td>\n\
+                    <td>'+com.description+'</td>\n\
+                    </tr>';
+        $("#table-commands tbody").append(row);
+    }
+}
+        RenderCommands();
+    //We create an artyom extension in order to call it when we want 
+
+    
+
   var noteContent = [];
   var textToDisplay = [];
-  var i = 0;
+
+
+  // starts voice recognition and appends to text box
   var UserDictation = speakEasy.newDictation({
     continuous: true, // Enable continuous if HTTPS connection
     onResult: function(text) {
@@ -231,6 +250,12 @@ $(document).ready(function() {
 
   $("#speech-stop").on("click", function() {
     UserDictation.stop();
-    $("#textBox").text(textToDisplay);
+    startArtyom();
   });
+
+
+  $("#textBox").text(textToDisplay);
+  startArtyom();
+
+
 });
