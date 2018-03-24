@@ -1,47 +1,156 @@
+/**************************************
+RESPONSIVE LAYOUT CSS
+**************************************/
+@media screen and (min-width: 800px) {
+  body {
+    max-width: 90%;
+  }
+  header {
+    width: 100%;
+  }
+  nav,
+  section {
+    float: left;
+  }
+  nav {
+    width: 20.83333%;
+    margin-right: 1.041667%;
+  }
+  section {
+    width: 78.125%;
+  }
+}
+@media screen and (min-width: 1000px) {
+  body {
+    max-width: 66.66667%;
+  }
+}
+/**************************************
+CSS for HEADER, NAV + Section
+**************************************/
+body {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #808080;
+}
 button.submit {
   float: right;
 }
-
 form#cms {
   margin-top: 50px;
 }
-
 #cms textarea {
   resize: none;
 }
-
 .panel-heading button.delete,
 button.edit {
   float: right;
   margin: 5px;
 }
-
 .user-container {
   margin-top: 50px;
 }
-
 .user-list {
   margin-top: 25px;
 }
-
 .diary-container {
   margin-top: 30px;
 }
-
 .diary {
   margin-top: 30px;
 }
-
 .hidden {
   display: none;
 }
-
 #user-name {
   width: 100%;
   height: 35px;
   margin-top: 5px;
 }
-
 .top-30 {
   margin-top: 30px;
+}
+/* Video Background */
+.vid {
+      z-index: 0;
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%; 
+      min-height: 100%;
+}
+
+.vidBackground{
+      z-index: 0;
+}
+/* Sign In Page */
+.signInBody {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+/* Sign-Up Form */
+input {
+  margin-bottom: 25px;
+}
+#signup {
+  font-size: 20px;
+  line-height: 50px;
+}
+.signup-btn {
+  background-color: #C2A59B;
+  color: #fff;
+}
+.signup-btn:hover {
+  background-color: #805840;
+  transition: all 0.9s ease;
+}
+/* Navigation */
+.nav {
+  background-color: #C2A59B;
+  list-style: none;
+  text-align: right;
+  padding: 20px 0 20px 0;
+}
+.nav>li {
+  display: inline-block;
+  padding: 0 25px 0 25px;
+  font-size: 20px;
+}
+.nav>li>a {
+  text-decoration: none;
+  color: #fff;
+}
+.nav>li>a:hover {
+  color: #fff;
+  background-color: #3C4135;
+  transition: all 0.9s ease;
+}
+.logo {
+  float: left;
+  padding-left: 25px;
+  width: 200px;
+  height: 120px;
+}
+/* Image Banner */
+.banner {
+  width: 100%;
+  display: block;
+}
+.banner>.banner-image {
+  width: 100%;
+  height: 450px;
+  display: block;
+}
+/* Footer */
+#main-footer {
+  padding: 2em;
+  background: #808080;
+  color: #fff;
+  text-align: left;
+}
+#main-footer a {
+  color: #00578a;
+  text-decoration: none;
 }
