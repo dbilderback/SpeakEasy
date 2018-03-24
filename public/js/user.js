@@ -14,14 +14,24 @@ $(document).ready(function() {
     $(userForm).on("submit", handleFormSubmit);
     
     // Gets the part of the url that comes after the "?" (which we have if we're updating a post)
+    // Looks for a query param in the url for user_id
     var url = this.location.pathname;
     var userId;
-
-    if (url.indexOf(":user_id=") !== -1) {
+    userId = getUserId();
+    $("#viewDiaryButton").attr("href", "/diary/:user_id="+userId);
+    getUser(userId);
+    
+    function getUserId() {
+      if (url.indexOf(":user_id=") !== -1) {
         userId = url.split("=")[1];
-        getUser(userId);
+        return userId;
+      }
+      else {
+      userId = "";
+      return userId;
+      }
     }
-
+    
     //function handles the event when the submit event is fired  
     function handleFormSubmit(event) {
       event.preventDefault();
