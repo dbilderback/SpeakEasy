@@ -130,7 +130,7 @@ $(document).ready(function() {
     var query = window.location.search;
     var partial = "";
     if (id) {
-      partial = " for Usr #" + id;
+      partial = " for User #" + id;
     }
     entryContainer.empty();
     var messageh2 = $("<h2>");
@@ -142,14 +142,6 @@ $(document).ready(function() {
   }
   var speakEasy = new Artyom();
   var commands = [
-    {
-      description: "Trigger the creation of a post with your voice",
-      indexes: ["start recording a new note", "create an entry"],
-      action: function(i) {
-        stopArtyom();
-        UserDictation.start();
-      }
-    },
     {
       description: "Go to specified page ",
       indexes: ["Take me to the * Page", "Go to the * Page"],
