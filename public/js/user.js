@@ -116,7 +116,7 @@ $(document).ready(function() {
   function startArtyom() {
     speakEasy.initialize({
       lang: "en-GB",
-      continuous: false,
+      continuous: true,
       debug: true,
       listen: true
     });
