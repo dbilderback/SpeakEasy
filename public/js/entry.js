@@ -1,3 +1,5 @@
+// import { setTimeout } from "timers";
+
 $(document).ready(function() {
   // Getting jQuery references to the entry body, title, form, and user select
   var bodyInput = $("#textBox");
@@ -32,10 +34,7 @@ $(document).ready(function() {
   function handleFormSubmit(event) {
     event.preventDefault();
     // Wont submit the post if we are missing a body, title, or author
-    if (
-      !titleInput.val().trim() ||
-      !bodyInput.val().trim() 
-    ) {
+    if (!titleInput.val().trim() || !bodyInput.val().trim()) {
       return;
     }
     // Constructing a newPost object to hand to the database
@@ -155,14 +154,14 @@ $(document).ready(function() {
   var commands = [
     {
       description: "Trigger the creation of a post with your voice",
-      indexes: ["start recording a new note", "create an entry"],
+      indexes: ["start recording a new note", "create a new note"],
       action: function(i) {
         stopArtyom();
         UserDictation.start();
       }
     },
     {
-      description: "Go to specified page ",
+      description: "Go to specified page (diary, entry, user)",
       indexes: ["Take me to the * Page", "Go to the * Page"],
       smart: true,
       action: function(i, wildcard) {
@@ -181,13 +180,21 @@ $(document).ready(function() {
             break;
         }
       }
+    },
+    //
+    {
+      description: "Login to SpeakEasy ",
+      indexes: ["log in", "log me in"],
+      action: function(i, wildcard) {
+        document.getElementById("").click();
+      }
     }
   ];
 
   function startArtyom() {
     speakEasy.initialize({
       lang: "en-GB",
-      continuous: false,
+      continuous: true,
       debug: true,
       listen: true
     });
@@ -234,22 +241,24 @@ $(document).ready(function() {
       noteContent.push(text);
       var latestResult = noteContent[noteContent.length - 1];
       console.log(latestResult);
-      if (latestResult === "") {
+      if (latestResult === "speak") {
+        noteContent.empty();
+      } else if (noteContent[noteContent.length - 2] === " stop recording now") {
+        UserDictation.stop();
+      } else if (latestResult === "") {
         textToDisplay.push(noteContent[noteContent.length - 2]);
       }
       $("textarea#textBox").val(textToDisplay);
-      console.log(noteContent);
       console.log(textToDisplay);
-      console.log(i);
     },
     onStart: function() {
       speakEasy.say("Speak");
     },
     onEnd: function() {
       speakEasy.say("Note Recorded");
+      startArtyom();
     }
   });
-
   $("#speech-start").on("click", function() {
     UserDictation.start();
   });

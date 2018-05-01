@@ -7,10 +7,10 @@
     "dialect": "mysql"
   },
   "test": {
-    "username": "wymz2716e0c4i5s7",
-    "password": "r4m6gnmuj913bt01",
-    "database": "ps6mczp6fnlfasg2",
-    "host": "ixqxr3ajmyapuwmi.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+    "username": "dl5zw2r4fh7tkcxu",
+    "password": "dyvkx220o617tp5u",
+    "database": "md92pw3sif95dwww",
+    "host": "s554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
     "dialect": "mysql"
   },
   "production": {
@@ -18,6 +18,8 @@
     "password": "",
     "database": "SpeakEasy",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "use_env_variable": "JAWSDB_URL"
+
   }
 }

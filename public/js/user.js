@@ -91,14 +91,6 @@ $(document).ready(function() {
   var speakEasy = new Artyom();
   var commands = [
     {
-      description: "Trigger the creation of a post with your voice",
-      indexes: ["start recording a new note", "create an entry"],
-      action: function(i) {
-        stopArtyom();
-        UserDictation.start();
-      }
-    },
-    {
       description: "Go to specified page ",
       indexes: ["Take me to the * Page", "Go to the * Page"],
       smart: true,
@@ -124,7 +116,7 @@ $(document).ready(function() {
   function startArtyom() {
     speakEasy.initialize({
       lang: "en-GB",
-      continuous: false,
+      continuous: true,
       debug: true,
       listen: true
     });
